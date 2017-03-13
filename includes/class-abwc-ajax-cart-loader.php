@@ -158,8 +158,8 @@ class ABWC_Ajax_Cart_Loader {
          */
         public function assets() {
             
-            wp_enqueue_script('abwc-ajax-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION. TRUE );
-            wp_enqueue_script('abwc-ajax-variation-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION. TRUE );
+            wp_enqueue_script('abwc-ajax-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.min.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION. TRUE );
+            wp_enqueue_script('abwc-ajax-variation-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.min.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION. TRUE );
             
             
         }
