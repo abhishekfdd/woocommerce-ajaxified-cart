@@ -13,7 +13,7 @@
  * @package           ABWC_Ajax_Cart
  *
  * @wordpress-plugin
- * Plugin Name:       WooCommerce Ajaxified Cart
+ * Plugin Name:       Ajaxified Cart WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/woocommerce-ajaxified-cart/
  * Description:       This Plugins ajaxifies single product page and variable products in shop page.
  * Version:           1.0.0
