@@ -8,7 +8,7 @@
  * that starts the plugin.
  *
  * @link              https://wordpress.org/plugins/ajaxified-cart-woocommerce/
- * @since             1.0.0
+ * @since             1.0.1
  * @package           ABWC_Ajax_Cart
  *
  * @wordpress-plugin
