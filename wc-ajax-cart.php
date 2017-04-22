@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -8,7 +7,7 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://example.com
+ * @link              https://wordpress.org/plugins/ajaxified-cart-woocommerce/
  * @since             1.0.0
  * @package           ABWC_Ajax_Cart
  *
@@ -35,30 +34,29 @@ if ( ! defined( 'WPINC' ) ) {
  * CONSTANTS
  * ========================================================================
  */
-
-// Codebase version
+// Codebase version.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_VERSION' ) ) {
 	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '1.0.0' );
 }
 
-// Directory
+// Directory.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_DIR' ) ) {
 	define( 'ABWC_AJAX_CART_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 }
 
-// Url
+// Url.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_URL' ) ) {
 	$plugin_url = plugin_dir_url( __FILE__ );
 
 	// If we're using https, update the protocol.
 	if ( is_ssl() ) {
-            $plugin_url = str_replace( 'http://', 'https://', $plugin_url );
-        }
+		$plugin_url = str_replace( 'http://', 'https://', $plugin_url );
+	}
 
 	define( 'ABWC_AJAX_CART_PLUGIN_URL', $plugin_url );
 }
 
-// File
+// File.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_FILE' ) ) {
 	define( 'ABWC_AJAX_CART_PLUGIN_FILE', __FILE__ );
 }
@@ -98,7 +96,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-abwc-ajax-cart.php';
 function run_abwc_ajax_cart() {
 
 	$plugin = new ABWC_Ajax_Cart();
-        return $plugin;
-
+	return $plugin;
 }
+
 run_abwc_ajax_cart();

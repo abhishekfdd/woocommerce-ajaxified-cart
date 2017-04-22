@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Define the internationalization functionality
  *
@@ -23,8 +22,7 @@
  * @subpackage ABWC_Ajax_Cart/includes
  * @author     Abhishek Kumar <abhishekfdd@gmail.com>
  */
-class ABWC_Ajax_Cart_i18n {
-
+class ABWC_Ajax_Cart_I18n {
 
 	/**
 	 * Load the plugin text domain for translation.
@@ -34,13 +32,8 @@ class ABWC_Ajax_Cart_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'abwc-ajax-cart',
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			'abwc-ajax-cart', false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
-
 	}
-
-
 
 }

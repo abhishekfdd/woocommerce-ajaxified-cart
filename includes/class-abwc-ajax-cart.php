@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the core plugin class
  *
@@ -62,7 +61,6 @@ class ABWC_Ajax_Cart {
 
 		$this->load_dependencies();
 		$this->set_locale();
-
 	}
 
 	/**
@@ -71,7 +69,7 @@ class ABWC_Ajax_Cart {
 	 * Include the following files that make up the plugin:
 	 *
 	 * - ABWC_Ajax_Cart_Loader. Orchestrates the hooks of the plugin.
-	 * - ABWC_Ajax_Cart_i18n. Defines internationalization functionality.
+	 * - ABWC_Ajax_Cart_I18n. Defines internationalization functionality.
 	 *
 	 * Create an instance of the loader
 	 *
@@ -93,13 +91,12 @@ class ABWC_Ajax_Cart {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-abwc-ajax-cart-i18n.php';
 
 		$this->loader = new ABWC_Ajax_Cart_Loader();
-
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the ABWC_Ajax_Cart_i18n class in order to set the domain and to register the hook
+	 * Uses the ABWC_Ajax_Cart_I18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -107,10 +104,9 @@ class ABWC_Ajax_Cart {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new ABWC_Ajax_Cart_i18n();
+		$plugin_i18n = new ABWC_Ajax_Cart_I18n();
 
 		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
-
 	}
 
 }

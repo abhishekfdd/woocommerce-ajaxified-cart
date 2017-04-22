@@ -1,9 +1,7 @@
 <?php
-
 /**
  * Fired during plugin activation
  *
-
  * @since      1.0.0
  *
  * @package    ABWC_Ajax_Cart
@@ -28,11 +26,10 @@ class ABWC_Ajax_Cart_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-            
-            if ( !function_exists('WC') ) {
-                return;
-            }
 
+		if ( ! function_exists( 'WC' ) ) {
+			return;
+		}
 	}
 
 }
