@@ -66,8 +66,8 @@ class ABWC_Ajax_Cart_Loader {
 
 		$product_id			 = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['product_id'] ) );
 		$quantity			 = empty( $_POST['quantity'] ) ? 1 : apply_filters( 'woocommerce_stock_amount', $_POST['quantity'] );
-		$variation_id		 = isset( $_POST['variation_id'] ) ? esc_attr( $_POST['variation_id'] ) : '' ;
-		$variation			 = isset( $_POST['variation'] ) ? esc_attr( $_POST['variation'] ) : '' ;
+		$variation_id		 = isset( $_POST['variation_id'] ) ? ( $_POST['variation_id'] ) : '' ;
+		$variation			 = isset( $_POST['variation'] ) ? ( $_POST['variation'] ) : '' ;
 		$passed_validation	 = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity );
 
 		if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation ) ) {
