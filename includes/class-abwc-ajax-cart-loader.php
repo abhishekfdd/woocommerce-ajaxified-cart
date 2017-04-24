@@ -52,7 +52,7 @@ class ABWC_Ajax_Cart_Loader {
 
 		if ( 'simple' === $product->product_type ) {
 
-			return apply_filters( 'abwc_add_to_cart_link', sprintf( '<input type=hidden data-product_id="%s" data-product_sku="%s" class="abwc-ajax-btn button">', esc_attr( $product->id ), esc_attr( $product->get_sku() )
+			echo apply_filters( 'abwc_add_to_cart_link', sprintf( '<input type=hidden data-product_id="%s" data-product_sku="%s" class="abwc-ajax-btn button">', esc_attr( $product->id ), esc_attr( $product->get_sku() )
 			), $product );
 		}
 	}

@@ -26,3 +26,6 @@ This plugin adds ajax feature for single product page and variable products in a
 
 = 1.0.1 =
 * Code Refactor for performance
+
+= 1.0.2 =
+* Single Product page ajax fix
