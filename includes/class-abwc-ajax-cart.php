@@ -28,6 +28,16 @@
 class ABWC_Ajax_Cart {
 
 	/**
+	 * The contains all the admin settings
+	 * the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      ABWC_Ajax_Cart_Admin    $admin_settings    All the admin settings for the plugin.
+	 */
+	protected $admin_settings;
+	
+	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
@@ -45,22 +55,88 @@ class ABWC_Ajax_Cart {
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
 	 */
 	public $plugin_name;
+	
+	/**
+	 * This options array is setup during class instantiation, holds
+	 * default and saved options for the plugin.
+	 *
+	 * @var array
+	 */
+	public $options = array();
+	
+	/**
+	 * Default options for the plugin, the strings are
+	 * run through localization functions during instantiation,
+	 * and after the user saves options the first time they
+	 * are loaded from the DB.
+	 *
+	 * @var array
+	 */
+	private $default_options = array();
+	
+	
+	/* Singleton
+	 * ===================================================================
+	 */
 
+	/**
+	 * Main Ajaxified Cart Instance.
+	 *
+	 * Ajaxified Cart is great
+	 * Please load it only one time
+	 * For this, we thank you
+	 *
+	 * Insures that only one instance of Ajaxified Cart exists in memory at any
+	 * one time. Also prevents needing to define globals all over the place.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @static object $instance
+	 * @uses ABWC_Ajax_Cart::setup() Setup the require functions.
+	 * @see run_abwc_ajax_cart()
+	 *
+	 * @return BuddyBoss Inbox The one true BuddyBoss.
+	 */
+	public static function instance() {
+		// Store the instance locally to avoid private static replication
+		static $instance = null;
+
+		// Only run these methods if they haven't been run previously
+		if ( null === $instance ) {
+			$instance = new ABWC_Ajax_Cart();
+			$instance->setup();
+		}
+
+		// Always return the instance
+		return $instance;
+	}
+	
 	/**
 	 * Define the core functionality of the plugin.
 	 *
-	 * Set the plugin name and the plugin version that can be used throughout the plugin.
+	 * Set the plugin name that can be used throughout the plugin.
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    1.0.0
+	 * @since    1.2.0
 	 */
-	public function __construct() {
 
+	private function setup() {
 		$this->plugin_name = 'woocommerce-ajaxified-cart';
 
 		$this->load_dependencies();
 		$this->set_locale();
+	}
+
+	/**
+	 * A dummy constructor to prevent Ajaxified Cart from being loaded more than once.
+	 *
+	 * @since 1.0.0
+	 * @see ABWC_Ajax_Cart::instance()
+	 * @see run_abwc_ajax_cart()
+	 */
+	private function __construct() {
+		/* nothing here */
 	}
 
 	/**
@@ -89,8 +165,21 @@ class ABWC_Ajax_Cart {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-abwc-ajax-cart-i18n.php';
+		
+		/**
+		 * The class responsible for admin settings
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-abwc-ajax-settings.php';
 
+		$this->admin_settings = new ABWC_Ajax_Cart_Admin(); 	
 		$this->loader = new ABWC_Ajax_Cart_Loader();
+		
+		$saved_options	 = get_option( 'abwc_ajax_plugin_options' );
+		$saved_options	 = maybe_unserialize( $saved_options );
+
+		$this->options = wp_parse_args( $saved_options, $this->default_options );
+		
 	}
 
 	/**
@@ -107,6 +196,23 @@ class ABWC_Ajax_Cart {
 		$plugin_i18n = new ABWC_Ajax_Cart_I18n();
 
 		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
+	}
+	
+	/**
+	 * Convenience function to access plugin options, returns false by default
+	 *
+	 * @since  1.2.0
+	 *
+	 * @param  string $key Option key
+	 *
+	 * @return mixed Option value (false if none/default)
+	 *
+	 */
+	public function option( $key ) {
+		$key	 = strtolower( $key );
+		$option	 = isset( $this->options[ $key ] ) ? $this->options[ $key ] : null;
+
+		return $option;
 	}
 
 }

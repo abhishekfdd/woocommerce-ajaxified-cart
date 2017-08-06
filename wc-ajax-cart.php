@@ -15,7 +15,7 @@
  * Plugin Name:       Ajaxified Cart WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/woocommerce-ajaxified-cart/
  * Description:       This Plugins ajaxifies single product page and variable products in shop page.
- * Version:           1.0.3
+ * Version:           1.2.0
  * Author:            Abhishek Kumar
  * Author URI:        http://github.com/abhishekfdd/
  * License:           GPL-2.0+
@@ -95,7 +95,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-abwc-ajax-cart.php';
  */
 function run_abwc_ajax_cart() {
 
-	$plugin = new ABWC_Ajax_Cart();
+	$plugin = ABWC_Ajax_Cart::instance();
 	return $plugin;
 }
 

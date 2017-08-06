@@ -47,12 +47,12 @@ class ABWC_Ajax_Cart_Loader {
 	 * @since    1.0.0
 	 */
 	public function single_product_ajaxified_button() {
-
+		
 		global $product;
+		
+		if ( 'simple' === $product->get_type() ) {
 
-		if ( 'simple' === $product->product_type ) {
-
-			echo apply_filters( 'abwc_add_to_cart_link', sprintf( '<input type=hidden data-product_id="%s" data-product_sku="%s" class="abwc-ajax-btn button">', esc_attr( $product->id ), esc_attr( $product->get_sku() )
+			echo apply_filters( 'abwc_add_to_cart_link', sprintf( '<input type=hidden data-product_id="%s" data-product_sku="%s" class="abwc-ajax-btn button">', esc_attr( $product->get_id() ), esc_attr( $product->get_sku() )
 			), $product );
 		}
 	}
@@ -101,7 +101,7 @@ class ABWC_Ajax_Cart_Loader {
 	 */
 	function abwc_variable_product_archive_ajax() {
 
-		$category_page = get_option( 'wc_ajax_add_to_cart_variable_category_page' );
+		$category_page = run_abwc_ajax_cart()->option( 'enable_on_archive_page' );
 
 		if ( ! isset( $category_page ) || ( isset( $category_page ) && 'yes' !== $category_page  ) ) {
 			return;
@@ -124,7 +124,7 @@ class ABWC_Ajax_Cart_Loader {
 						'quantity'	 => 1,
 						'class'		 => implode( ' ', array_filter( array(
 							'button',
-							'product_type_' . $product->product_type,
+							'product_type_' . $product->get_type(),
 							$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
 							$product->supports( 'ajax_add_to_cart' ) ? 'ajax_add_to_cart' : '',
 						) ) ),
@@ -132,7 +132,7 @@ class ABWC_Ajax_Cart_Loader {
 
 					$args = apply_filters( 'woocommerce_loop_add_to_cart_args', wp_parse_args( $args, $defaults ), $product );
 
-					if ( 'variable' === $product->product_type ) {
+					if ( 'variable' === $product->get_type() ) {
 						woocommerce_variable_add_to_cart();
 					} else {
 						wc_get_template( 'loop/add-to-cart.php', $args );
