@@ -50,7 +50,7 @@ class ABWC_Ajax_Cart_Admin {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @uses run_abwc_ajax_cart() Get options from main BuddyBoss_Inbox_Admin class
+	 * @uses run_abwc_ajax_cart() Get options from main Ajaxified_Admin class
 	 * @uses is_admin() Ensures we're in the admin area
 	 * @uses curent_user_can() Checks for permissions
 	 * @uses add_action() Add hooks

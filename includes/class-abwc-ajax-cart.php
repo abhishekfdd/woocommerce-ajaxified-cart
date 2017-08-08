@@ -95,7 +95,7 @@ class ABWC_Ajax_Cart {
 	 * @uses ABWC_Ajax_Cart::setup() Setup the require functions.
 	 * @see run_abwc_ajax_cart()
 	 *
-	 * @return BuddyBoss Inbox The one true BuddyBoss.
+	 * @return Ajaxified Cart.
 	 */
 	public static function instance() {
 		// Store the instance locally to avoid private static replication
@@ -171,6 +171,13 @@ class ABWC_Ajax_Cart {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-abwc-ajax-settings.php';
+		
+		/**
+		 * The class responsible for notices
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-abwc-ajax-notices.php';
+		ABWC_Ajax_Cart_notices::instance();
 
 		$this->admin_settings = new ABWC_Ajax_Cart_Admin(); 	
 		$this->loader = new ABWC_Ajax_Cart_Loader();

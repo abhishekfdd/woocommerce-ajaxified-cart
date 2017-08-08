@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/index\n"
-"POT-Creation-Date: 2017-08-06 13:40:33+00:00\n"
+"POT-Creation-Date: 2017-08-08 19:25:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,6 +24,10 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
+#: admin/class-abwc-ajax-notices.php:71 admin/class-abwc-ajax-settings.php:158
+msgid "Settings"
+msgstr ""
+
 #: admin/class-abwc-ajax-settings.php:76 admin/class-abwc-ajax-settings.php:121
 msgid "Ajaxified Cart"
 msgstr ""
@@ -38,8 +42,4 @@ msgstr ""
 
 #: admin/class-abwc-ajax-settings.php:103
 msgid "Enable ajaxified cart for variable products on archive page"
-msgstr ""
-
-#: admin/class-abwc-ajax-settings.php:158
-msgid "Settings"
 msgstr ""

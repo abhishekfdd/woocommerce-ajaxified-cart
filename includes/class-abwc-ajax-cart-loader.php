@@ -32,6 +32,7 @@ class ABWC_Ajax_Cart_Loader {
 		add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'single_product_ajaxified_button' ) );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 
 		add_action( 'wp_ajax_woocommerce_add_to_cart_variable_rc', array( $this, 'abwc_add_to_cart_variable_rc_callback' ) );
 		add_action( 'wp_ajax_nopriv_woocommerce_add_to_cart_variable_rc', array( $this, 'abwc_add_to_cart_variable_rc_callback' ) );
@@ -151,6 +152,19 @@ class ABWC_Ajax_Cart_Loader {
 
 		wp_enqueue_script( 'abwc-ajax-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.min.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION . true );
 		wp_enqueue_script( 'abwc-ajax-variation-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.min.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION . true );
+		
+	}
+	
+	/**
+	 * Loading admin js required for this plugin
+	 *
+	 * @since    1.0.0
+	 */
+	public function admin_assets() {
+		
+		wp_enqueue_script( 'abwc-ajax-admin-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart-admin.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION . true );
+		wp_localize_script( 'abwc-ajax-admin-js', 'abwc_ajax_data', array( 'ajax_url' => admin_url('admin-ajax.php')) );
+		
 	}
 
 }

@@ -1,3 +1,7 @@
+#: admin/class-abwc-ajax-notices.php:71 admin/class-abwc-ajax-settings.php:158
+msgid "Settings"
+msgstr ""
+
 #: admin/class-abwc-ajax-settings.php:76 admin/class-abwc-ajax-settings.php:121
 msgid "Ajaxified Cart"
 msgstr ""
@@ -12,8 +16,4 @@ msgstr ""
 
 #: admin/class-abwc-ajax-settings.php:103
 msgid "Enable ajaxified cart for variable products on archive page"
-msgstr ""
-
-#: admin/class-abwc-ajax-settings.php:158
-msgid "Settings"
 msgstr ""
