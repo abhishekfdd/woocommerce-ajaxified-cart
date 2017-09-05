@@ -37,3 +37,6 @@ This plugin adds ajax feature for single product page and variable products in a
 * Added admin settings page for enabling/disabling ajaxified cart for variable products on shop page.
 * Now ajaxified cart is working for variable products on shop page.
 * Notices fixed on product single page.
+
+= 1.2.1 =
+* Fatal error fix
