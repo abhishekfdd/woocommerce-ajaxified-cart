@@ -40,3 +40,7 @@ This plugin adds ajax feature for single product page and variable products in a
 
 = 1.2.1 =
 * Fatal error fix
+
+= 1.2.2 =
+* Simple products archive ajax add to cart when varibale product archive ajax option is enabled issue fix.
+* fixed 500 error when tried to add more variation products to cart than stock holds.
