@@ -82,14 +82,13 @@ class ABWC_Ajax_Cart_Loader {
 			// Return fragments.
 			WC_AJAX::get_refreshed_fragments();
 		} else {
-			$this->json_headers();
 
 			// If there was an error adding to the cart, redirect to the product page to show any errors.
 			$data = array(
 				'error'			 => true,
 				'product_url'	 => apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $product_id ), $product_id ),
 			);
-			echo wp_json_encode( $data );
+			wp_send_json( $data );
 		}
 		wp_die();
 	}
