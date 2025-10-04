@@ -1,13 +1,13 @@
-=== WooCommerce Ajaxified Cart ===
+=== “Ajaxified Cart plugin for eCommerce stores (compatible with WooCommerce)” ===
 Contributors: abhishekfdd
 Tags: woocommerce, ajax, cart
 Requires at least: 3.0.1
-Tested up to: 4.8
-Stable tag: 4.8
+Tested up to: 6.6.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This Plugins ajaxifies single product page and variable products in shop page.
+This plugin adds AJAX add-to-cart to single product and variable products in archive pages. Compatible with WooCommerce.
 
 == Description ==
 
@@ -20,6 +20,9 @@ This plugin adds ajax feature for single product page and variable products in a
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==
+
+= 2.0.0 =
+* Tested up to WooCommerce 6.6.2 and WordPress 6.2.2
 
 = 1.0.0 =
 * Initial release
