@@ -45,6 +45,15 @@ class ABWC_Ajax_Cart_Loader {
 		) );
 
 		add_action( 'after_setup_theme', array( $this, 'abwc_variable_product_archive_ajax' ) );
+		// Block product button enhancement.
+		add_filter( 'render_block', array( $this, 'abwc_filter_block_product_button' ), 10, 2 );
+		// AJAX to fetch variation form for block product cards.
+		add_action( 'wp_ajax_abwc_get_variable_form', array( $this, 'abwc_get_variable_form' ) );
+		add_action( 'wp_ajax_nopriv_abwc_get_variable_form', array( $this, 'abwc_get_variable_form' ) );
+		add_filter( 'woocommerce_blocks_product_grid_item_html', array( $this, 'abwc_blocks_product_grid_item_html' ), 10, 3 );
+
+		add_action( 'wp_ajax_abwc_get_variable_form_by_slug', array( $this, 'abwc_get_variable_form_by_slug' ) );
+		add_action( 'wp_ajax_nopriv_abwc_get_variable_form_by_slug', array( $this, 'abwc_get_variable_form_by_slug' ) );
 	}
 
 	/**
@@ -167,6 +176,102 @@ class ABWC_Ajax_Cart_Loader {
 	}
 
 	/**
+	 * Filter to enhance block product button with AJAX attributes.
+	 *
+	 * @param string $block_content The block content.
+	 * @param array  $block        The block data.
+	 * @return string Modified block content.
+	 */
+	public function abwc_filter_block_product_button( $block_content, $block ) {
+		if ( empty( $block_content ) ) {
+			return $block_content;
+		}
+		if ( isset( $block['blockName'] ) && 'woocommerce/product-button' === $block['blockName'] ) {
+			global $product;
+			if ( $product instanceof WC_Product && $product->is_type( 'variable' ) ) {
+				// Ensure data-abwc-variable attribute is present on first anchor.
+				if ( false === strpos( $block_content, 'data-abwc-variable="1"' ) ) {
+					$block_content = preg_replace( '/<a\b([^>]*)>/', '<a$1 data-abwc-variable="1">', $block_content, 1 );
+				}
+			}
+		}
+		return $block_content;
+	}
+
+	/**
+	 * AJAX handler to fetch variable product form.
+	 *
+	 * @since    1.0.0
+	 */
+	public function abwc_get_variable_form() {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+		}
+		$product_id  = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+		$product_obj = wc_get_product( $product_id );
+		if ( ! $product_obj || ! $product_obj->is_type( 'variable' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid product.', 'abwc-ajax-cart' ) ) );
+		}
+		global $product, $post; // Set globals for WooCommerce template functions.
+		$product = $product_obj; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post    = get_post( $product_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		if ( $post ) {
+			setup_postdata( $post );
+		}
+		ob_start();
+		woocommerce_variable_add_to_cart();
+		$form_html = ob_get_clean();
+		if ( $post ) {
+			wp_reset_postdata();
+		}
+		wp_send_json_success( array( 'html' => $form_html ) );
+	}
+
+	/**
+	 * AJAX handler to fetch variable product form by slug.
+	 *
+	 * @since    1.0.0
+	 */
+	public function abwc_get_variable_form_by_slug() {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+		}
+		$slug_raw = isset( $_POST['product_slug'] ) ? wp_unslash( $_POST['product_slug'] ) : '';
+		$slug     = sanitize_title( $slug_raw );
+		if ( empty( $slug ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid product slug.', 'abwc-ajax-cart' ) ) );
+		}
+		$post = get_page_by_path( $slug, OBJECT, 'product' );
+		if ( ! $post ) {
+			$q = new WP_Query( array( 'post_type' => 'product', 'name' => $slug, 'posts_per_page' => 1 ) );
+			if ( $q->have_posts() ) {
+				$post = $q->posts[0];
+			}
+			wp_reset_postdata();
+		}
+		if ( ! $post ) {
+			wp_send_json_error( array( 'message' => __( 'Product not found.', 'abwc-ajax-cart' ) ) );
+		}
+		$product_obj = wc_get_product( $post->ID );
+		if ( ! $product_obj || ! $product_obj->is_type( 'variable' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Not a variable product.', 'abwc-ajax-cart' ) ) );
+		}
+		global $product, $post; // Set globals for WooCommerce template functions.
+		$product = $product_obj; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post    = get_post( $product_obj->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		if ( $post ) {
+			setup_postdata( $post );
+		}
+		ob_start();
+		woocommerce_variable_add_to_cart();
+		$html = ob_get_clean();
+		if ( $post ) {
+			wp_reset_postdata();
+		}
+		wp_send_json_success( array( 'html' => $html, 'product_id' => $product_obj->get_id() ) );
+	}
+
+	/**
 	 * Loading js required for this plugin
 	 *
 	 * @since    1.0.0
@@ -180,12 +285,22 @@ class ABWC_Ajax_Cart_Loader {
 		$variation_file = is_readable( $dist_path . 'abwc-ajax-variation-cart.min.js' ) ? $dist_url . 'abwc-ajax-variation-cart.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.js';
 
 		wp_enqueue_script( 'abwc-ajax-js', $main_file, array( 'jquery', 'wc-add-to-cart' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
-		wp_enqueue_script( 'abwc-ajax-variation-js', $variation_file, array( 'jquery', 'wc-add-to-cart' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
+		wp_enqueue_script( 'abwc-ajax-variation-js', $variation_file, array( 'jquery', 'wc-add-to-cart', 'wc-add-to-cart-variation' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
 
 		// Localize security + data for variation ajax.
 		wp_localize_script( 'abwc-ajax-variation-js', 'abwc_ajax_frontend', array(
-			'nonce' => wp_create_nonce( 'abwc_add_to_cart' ),
+			'nonce'    => wp_create_nonce( 'abwc_add_to_cart' ),
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'i18n'     => array(
+				'loading'        => __( 'Loading options…', 'abwc-ajax-cart' ),
+				'close'          => __( 'Close', 'abwc-ajax-cart' ),
+				'error'          => __( 'Unable to load options.', 'abwc-ajax-cart' ),
+				'not_variable'   => __( 'Product is not variable.', 'abwc-ajax-cart' ),
+				'product_missing'=> __( 'Product not found.', 'abwc-ajax-cart' ),
+				'selectOptionsText' => __( 'Select options', 'abwc-ajax-cart' ),
+			),
 		) );
+		wp_enqueue_style( 'abwc-modal', ABWC_AJAX_CART_PLUGIN_URL . 'assets/css/abwc-modal.css', array(), ABWC_AJAX_CART_PLUGIN_VERSION );
 	}
 
 	/**
@@ -199,6 +314,43 @@ class ABWC_Ajax_Cart_Loader {
 		$admin_file = is_readable( $dist_path . 'abwc-ajax-cart-admin.min.js' ) ? $dist_url . 'abwc-ajax-cart-admin.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart-admin.js';
 		wp_enqueue_script( 'abwc-ajax-admin-js', $admin_file, array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
 		wp_localize_script( 'abwc-ajax-admin-js', 'abwc_ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+	}
+
+	/**
+	 * Inject data attributes for variable products in block editor product grid.
+	 *
+	 * @param string $html    Original HTML.
+	 * @param array  $data    Block data.
+	 * @param WC_Product $product Product object.
+	 * @return string Modified HTML.
+	 */
+	public function abwc_blocks_product_grid_item_html( $html, $data, $product ) {
+		if ( ! $product instanceof WC_Product ) {
+			return $html;
+		}
+		if ( ! $product->is_type( 'variable' ) ) {
+			return $html;
+		}
+		$product_id = $product->get_id();
+		// Add a hidden marker + enhance any product-button anchor/button tag.
+		$marker = '<input type="hidden" class="abwc-block-variable-product" data-product_id="' . esc_attr( $product_id ) . '" data-abwc-variable="1" />';
+		// Inject data attributes into the first anchor/button with product link if not already added.
+		$pattern = '/<(a|button)\b([^>]*)(href|class)[^>]*>(.*?)<\/\1>/is';
+		$modified = preg_replace_callback( $pattern, function( $matches ) use ( $product_id ) {
+			$tag   = $matches[1];
+			$attrs = $matches[2];
+			$content = $matches[4];
+			if ( false === strpos( $attrs, 'data-product_id' ) ) {
+				$attrs .= ' data-product_id="' . esc_attr( $product_id ) . '" data-abwc-variable="1"';
+			}
+			return '<' . $tag . $attrs . '>' . $content . '</' . $tag . '>';
+		}, $html, 1 );
+		if ( $modified ) {
+			$html = $modified . $marker;
+		} else {
+			$html .= $marker; // fallback append.
+		}
+		return $html;
 	}
 
 }
