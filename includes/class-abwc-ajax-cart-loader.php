@@ -38,6 +38,7 @@ class ABWC_Ajax_Cart_Loader {
 			$this,
 			'abwc_add_to_cart_variable_rc_callback'
 		) );
+
 		add_action( 'wp_ajax_nopriv_woocommerce_add_to_cart_variable_rc', array(
 			$this,
 			'abwc_add_to_cart_variable_rc_callback'
@@ -162,15 +163,16 @@ class ABWC_Ajax_Cart_Loader {
 	 */
 	public function assets() {
 
-		wp_enqueue_script( 'abwc-ajax-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.js', array(
-			'jquery',
-			'wc-add-to-cart'
-		), ABWC_AJAX_CART_PLUGIN_VERSION, true );
-		wp_enqueue_script( 'abwc-ajax-variation-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.js', array(
-			'jquery',
-			'wc-add-to-cart'
-		), ABWC_AJAX_CART_PLUGIN_VERSION, true );
+		$dist_path = ABWC_AJAX_CART_PLUGIN_DIR . 'assets/js/dist/';
+		$dist_url  = ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/dist/';
 
+		// Simple product/cart script.
+		$main_file = is_readable( $dist_path . 'abwc-ajax-cart.min.js' ) ? $dist_url . 'abwc-ajax-cart.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.js';
+		// Variation script.
+		$variation_file = is_readable( $dist_path . 'abwc-ajax-variation-cart.min.js' ) ? $dist_url . 'abwc-ajax-variation-cart.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.js';
+
+		wp_enqueue_script( 'abwc-ajax-js', $main_file, array( 'jquery', 'wc-add-to-cart' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
+		wp_enqueue_script( 'abwc-ajax-variation-js', $variation_file, array( 'jquery', 'wc-add-to-cart' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
 	}
 
 	/**
@@ -179,10 +181,11 @@ class ABWC_Ajax_Cart_Loader {
 	 * @since    1.0.0
 	 */
 	public function admin_assets() {
-
-		wp_enqueue_script( 'abwc-ajax-admin-js', ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart-admin.js', array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION . true );
+		$dist_path = ABWC_AJAX_CART_PLUGIN_DIR . 'assets/js/dist/';
+		$dist_url  = ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/dist/';
+		$admin_file = is_readable( $dist_path . 'abwc-ajax-cart-admin.min.js' ) ? $dist_url . 'abwc-ajax-cart-admin.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart-admin.js';
+		wp_enqueue_script( 'abwc-ajax-admin-js', $admin_file, array( 'jquery' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
 		wp_localize_script( 'abwc-ajax-admin-js', 'abwc_ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-
 	}
 
 }

@@ -1,0 +1,2 @@
+Gruntfile.js has been removed as part of migration to Webpack. Restore from version control if needed.
+

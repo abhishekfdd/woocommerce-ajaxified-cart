@@ -47,3 +47,26 @@ This plugin adds ajax feature for single product page and variable products in a
 = 1.2.2 =
 * Simple products archive ajax add to cart when varibale product archive ajax option is enabled issue fix.
 * fixed 500 error when tried to add more variation products to cart than stock holds.
+
+== Development ==
+
+The legacy Grunt workflow has been replaced by Webpack.
+
+Build commands:
+
+1. Install dependencies:
+   npm install
+2. Production build (minified + source maps):
+   npm run build
+3. Watch during development:
+   npm run watch
+4. Update POT file:
+   npm run pot
+5. Compile .po -> .mo:
+   npm run mo
+6. Lint JS:
+   npm run lint
+
+Output JS bundles are generated into assets/js/dist/*.min.js and automatically enqueued with fallbacks to source files if the dist build is missing.
+
+To revert to the old Grunt setup, restore Gruntfile.js and related devDependencies.
