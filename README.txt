@@ -23,7 +23,10 @@ This plugin adds ajax feature for single product page and variable products in a
 == Changelog ==
 
 = 2.0.0 =
-* Tested up to WooCommerce 6.6.2 and WordPress 6.2.2
+* Major update: migrated build workflow from Grunt to Webpack.
+* Performance and code structure improvements.
+* Updated compatibility: WooCommerce 6.6.2, WordPress 6.2.2.
+* Added support for block-based themes.
 
 = 1.0.0 =
 * Initial release
