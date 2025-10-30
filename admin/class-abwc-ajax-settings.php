@@ -141,7 +141,11 @@ class ABWC_Ajax_Cart_Admin {
 	 * Validate functionalities
 	 */
 	public function plugin_options_validate( $input ) {
-		return $input; //no validations for now
+		$sanitized = array();
+		if ( isset( $input['enable_on_archive_page'] ) && 'yes' === $input['enable_on_archive_page'] ) {
+			$sanitized['enable_on_archive_page'] = 'yes';
+		}
+		return $sanitized;
 	}
 
 	/**

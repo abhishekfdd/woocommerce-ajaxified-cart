@@ -91,9 +91,9 @@ jQuery(($) => {
 
 	// Support for block-based Product Collection variable products.
 	$(document).on('click', 'a[data-abwc-variable="1"]', function (e) {
-		const $btn = $(this);
+		const $btn = $(this); abwcLastTrigger = $btn;
+		// Already loaded; just show modal again.
 		if ($btn.data('abwc-loaded')) {
-			// Already loaded; just show modal again.
 			e.preventDefault();
 			abwcShowModal();
 			return false;
@@ -137,7 +137,7 @@ jQuery(($) => {
 
 	// Intercept block button elements too (buttons or anchors with data-abwc-variable) & support keyboard ESC close.
 	$(document).on('click', '[data-abwc-variable="1"].wp-block-button__link, button[data-abwc-variable="1"]', function(e){
-		const $el = $(this);
+		const $el = $(this); abwcLastTrigger = $el;
 		if ($el.data('abwc-loaded')) {
 			e.preventDefault();
 			abwcShowModal();
@@ -175,6 +175,7 @@ jQuery(($) => {
 	document.addEventListener('click', function(ev){
 		const target = ev.target.closest('a[data-abwc-variable="1"], button[data-abwc-variable="1"], a[data-abwc-variable][data-product_slug]');
 		if (!target) return;
+		abwcLastTrigger = $(target);
 		// Always intercept to manage modal.
 		ev.preventDefault();
 		if (target.dataset.abwcLoaded === 'true') {
@@ -218,7 +219,7 @@ jQuery(($) => {
 
 	// Fallback handler when we only have product_slug.
 	$(document).on('click', '[data-abwc-variable="1"][data-product_slug]:not([data-product_id])', function(e){
-		const $el = $(this);
+		const $el = $(this); abwcLastTrigger = $el;
 		if ($el.data('abwc-loaded')) {
 			e.preventDefault();
 			abwcShowModal();
@@ -251,15 +252,53 @@ jQuery(($) => {
 			.fail(() => { $el.removeClass('loading'); });
 	});
 
+	// Refresh button inside modal (delegated) to re-fetch form.
+	$(document).on('click', '#abwc-variable-modal .abwc-refresh', function(e){
+		e.preventDefault();
+		const pid = $('#abwc-variable-modal .variations_form input[name="product_id"]').val();
+		if (!pid || typeof abwc_ajax_frontend === 'undefined') return;
+		const $modal = $('#abwc-variable-modal');
+		$modal.attr('data-loading','true');
+		$.post(abwc_ajax_frontend.ajax_url, { action: 'abwc_get_variable_form', product_id: pid, nonce: abwc_ajax_frontend.nonce })
+			.done(resp => {
+				if (resp && resp.success && resp.data && resp.data.html) {
+					$modal.find('.abwc-variable-modal__inner').html('<button type="button" class="abwc-close" aria-label="'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.close : 'Close') +'" style="position:absolute;top:8px;right:8px;">'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.close : '×') +'</button>' + resp.data.html + '<p style="margin-top:12px;text-align:right;"><a href="#" class="abwc-refresh">Refresh</a></p>');
+					$modal.attr('data-loading','false');
+					$modal.find('.variations_form').wc_variation_form();
+					abwcShowModal();
+				}
+			})
+			.always(()=>{ $modal.attr('data-loading','false'); });
+	});
+
 	// Helper to show existing modal and refocus.
+	let abwcLastTrigger = null;
 	function abwcShowModal() {
 		const $modal = $('#abwc-variable-modal');
 		if ($modal.length) {
-			$modal.show();
-			const firstSelect = $modal.find('.variations_form select:first');
-			if (firstSelect.length) { firstSelect.focus(); }
+			$modal.attr('aria-hidden','false');
+			$('body').addClass('abwc-modal-open');
+			const focusable = $modal.find('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])').filter(':visible');
+			const first = focusable.first();
+			const last = focusable.last();
+			if (first.length) first.focus();
+			$modal.off('keydown.abwcTrap').on('keydown.abwcTrap', function(e){
+				if ( e.key === 'Escape' ) { abwcCloseModal(); return; }
+				if ( e.key === 'Tab' ) {
+					if ( e.shiftKey && document.activeElement === first[0] ) { e.preventDefault(); last.focus(); }
+					else if ( ! e.shiftKey && document.activeElement === last[0] ) { e.preventDefault(); first.focus(); }
+				}
+			});
 			return true;
 		}
 		return false;
+	}
+	function abwcCloseModal() {
+		const $modal = $('#abwc-variable-modal');
+		$modal.attr('aria-hidden','true').hide();
+		$('body').removeClass('abwc-modal-open');
+		if (abwcLastTrigger && abwcLastTrigger.length) {
+			abwcLastTrigger.focus();
+		}
 	}
 });
