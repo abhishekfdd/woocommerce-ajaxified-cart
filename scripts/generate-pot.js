@@ -29,7 +29,7 @@ try {
           headerEndPos = afterMsgstr + headerEndMatch.index;
         }
         const year = new Date().getFullYear();
-		  const iso = new Date().toISOString().slice(0, 19).replace('T', ' ') + '+00:00';
+		const iso = new Date().toISOString().slice(0, 19).replace('T', ' ') + '+00:00';
         const headerLines = [
           `"Project-Id-Version: Ajaxified Cart for Online Stores\\n"`,
           `"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ajaxified-cart-woocommerce\\n"`,
