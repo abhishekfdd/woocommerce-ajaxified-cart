@@ -84,7 +84,7 @@ class ABWC_Ajax_Cart_Loader {
 
 		// Security: verify nonce.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
-			wp_send_json( array( 'error' => true, 'product_url' => '', 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'product_url' => '', 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
 		}
 
 		$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
@@ -292,12 +292,12 @@ class ABWC_Ajax_Cart_Loader {
 		wp_localize_script( 'abwc-ajax-variation-js', 'abwc_ajax_frontend', array(
 			'nonce'    => wp_create_nonce( 'abwc_add_to_cart' ),
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'i18n'     => array(
-				'loading'        => __( 'Loading options…', 'abwc-ajax-cart' ),
-				'close'          => __( 'Close', 'abwc-ajax-cart' ),
-				'error'          => __( 'Unable to load options.', 'abwc-ajax-cart' ),
-				'not_variable'   => __( 'Product is not variable.', 'abwc-ajax-cart' ),
-				'product_missing'=> __( 'Product not found.', 'abwc-ajax-cart' ),
+			'i18n' => array(
+				'loading'           => __( 'Loading options…', 'abwc-ajax-cart' ),
+				'close'             => __( 'Close', 'abwc-ajax-cart' ),
+				'error'             => __( 'Unable to load options.', 'abwc-ajax-cart' ),
+				'not_variable'      => __( 'Product is not variable.', 'abwc-ajax-cart' ),
+				'product_missing'   => __( 'Product not found.', 'abwc-ajax-cart' ),
 				'selectOptionsText' => __( 'Select options', 'abwc-ajax-cart' ),
 			),
 		) );
