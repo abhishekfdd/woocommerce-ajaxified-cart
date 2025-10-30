@@ -4,7 +4,7 @@
     "scripts": {
         "build": "webpack --mode=production",
         "watch": "webpack --watch --mode=development",
-        "pot": "wp-pot --src '**/*.php' --domain 'abwc-ajax-cart' --package 'Ajaxified Cart for Online Stores' --dest 'languages/abwc-ajax-cart.pot'",
+        "pot": "node scripts/generate-pot.js",
         "mo": "find languages -name '*.po' -exec sh -c 'for f; do msgfmt \"$f\" -o \"${f%.po}.mo\"; done' sh {} +",
         "lint": "eslint assets/js/abwc-ajax-cart.js assets/js/abwc-ajax-variation-cart.js assets/js/abwc-ajax-cart-admin.js"
     },

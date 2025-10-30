@@ -1,0 +1,79 @@
+# Copyright (C) 2025 Ajaxified Cart for Online Stores
+# This file is distributed under the same license as the Ajaxified Cart for Online Stores package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Ajaxified Cart for Online Stores\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-30 19:26+0000\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin/class-abwc-ajax-settings.php:76, admin/class-abwc-ajax-settings.php:76, admin/class-abwc-ajax-settings.php:124
+msgid "Ajaxified Cart"
+msgstr ""
+
+#: admin/class-abwc-ajax-settings.php:91
+msgid "General Settings"
+msgstr ""
+
+#: admin/class-abwc-ajax-settings.php:93
+msgid "Enable on archive page"
+msgstr ""
+
+#: admin/class-abwc-ajax-settings.php:105
+msgid "Enable ajaxified cart for variable products on archive page"
+msgstr ""
+
+#: admin/class-abwc-ajax-settings.php:131
+msgid "Save Changes"
+msgstr ""
+
+#: admin/class-abwc-ajax-settings.php:166
+msgid "Settings"
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:87, includes/class-abwc-ajax-cart-loader.php:209, includes/class-abwc-ajax-cart-loader.php:238
+msgid "Security check failed."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:214
+msgid "Invalid product."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:243
+msgid "Invalid product slug."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:254, includes/class-abwc-ajax-cart-loader.php:300
+msgid "Product not found."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:258
+msgid "Not a variable product."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:296
+msgid "Loading options…"
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:297
+msgid "Close"
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:298
+msgid "Unable to load options."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:299
+msgid "Product is not variable."
+msgstr ""
+
+#: includes/class-abwc-ajax-cart-loader.php:301
+msgid "Select options"
+msgstr ""
