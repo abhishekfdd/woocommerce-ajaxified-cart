@@ -33,17 +33,17 @@ class ABWC_Ajax_Cart {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      ABWC_Ajax_Cart_Admin    $admin_settings    All the admin settings for the plugin.
+	 * @var      ABWC_Ajax_Cart_Admin $admin_settings All the admin settings for the plugin.
 	 */
 	protected $admin_settings;
-	
+
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      ABWC_Ajax_Cart_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      ABWC_Ajax_Cart_Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -51,11 +51,11 @@ class ABWC_Ajax_Cart {
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @access   public
+	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
 	public $plugin_name;
-	
+
 	/**
 	 * This options array is setup during class instantiation, holds
 	 * default and saved options for the plugin.
@@ -63,7 +63,7 @@ class ABWC_Ajax_Cart {
 	 * @var array
 	 */
 	public $options = array();
-	
+
 	/**
 	 * Default options for the plugin, the strings are
 	 * run through localization functions during instantiation,
@@ -73,8 +73,8 @@ class ABWC_Ajax_Cart {
 	 * @var array
 	 */
 	private $default_options = array();
-	
-	
+
+
 	/* Singleton
 	 * ===================================================================
 	 */
@@ -89,13 +89,13 @@ class ABWC_Ajax_Cart {
 	 * Insures that only one instance of Ajaxified Cart exists in memory at any
 	 * one time. Also prevents needing to define globals all over the place.
 	 *
+	 * @return Ajaxified Cart.
+	 * @uses ABWC_Ajax_Cart::setup() Setup the require functions.
+	 * @see  run_abwc_ajax_cart()
+	 *
 	 * @since 1.2.0
 	 *
 	 * @static object $instance
-	 * @uses ABWC_Ajax_Cart::setup() Setup the require functions.
-	 * @see run_abwc_ajax_cart()
-	 *
-	 * @return Ajaxified Cart.
 	 */
 	public static function instance() {
 		// Store the instance locally to avoid private static replication
@@ -110,7 +110,7 @@ class ABWC_Ajax_Cart {
 		// Always return the instance
 		return $instance;
 	}
-	
+
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -165,28 +165,21 @@ class ABWC_Ajax_Cart {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-abwc-ajax-cart-i18n.php';
-		
+
 		/**
 		 * The class responsible for admin settings
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-abwc-ajax-settings.php';
-		
-		/**
-		 * The class responsible for notices
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-abwc-ajax-notices.php';
-		ABWC_Ajax_Cart_notices::instance();
 
-		$this->admin_settings = new ABWC_Ajax_Cart_Admin(); 	
-		$this->loader = new ABWC_Ajax_Cart_Loader();
-		
-		$saved_options	 = get_option( 'abwc_ajax_plugin_options' );
-		$saved_options	 = maybe_unserialize( $saved_options );
+		$this->admin_settings = new ABWC_Ajax_Cart_Admin();
+		$this->loader         = new ABWC_Ajax_Cart_Loader();
+
+		$saved_options = get_option( 'abwc_ajax_plugin_options' );
+		$saved_options = maybe_unserialize( $saved_options );
 
 		$this->options = wp_parse_args( $saved_options, $this->default_options );
-		
+
 	}
 
 	/**
@@ -204,20 +197,17 @@ class ABWC_Ajax_Cart {
 
 		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
 	}
-	
+
 	/**
-	 * Convenience function to access plugin options, returns false by default
+	 * Convenience function to access plugin options, returns null if missing.
 	 *
-	 * @since  1.2.0
-	 *
-	 * @param  string $key Option key
-	 *
-	 * @return mixed Option value (false if none/default)
-	 *
+	 * @param string $key Option key.
+	 * @return mixed|null Option value or null if not set.
+	 * @since 1.2.0
 	 */
 	public function option( $key ) {
-		$key	 = strtolower( $key );
-		$option	 = isset( $this->options[ $key ] ) ? $this->options[ $key ] : null;
+		$key    = strtolower( $key );
+		$option = isset( $this->options[ $key ] ) ? $this->options[ $key ] : null;
 
 		return $option;
 	}

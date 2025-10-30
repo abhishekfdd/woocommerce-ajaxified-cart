@@ -12,16 +12,20 @@
  * @package           ABWC_Ajax_Cart
  *
  * @wordpress-plugin
- * Plugin Name:       Ajaxified Cart WooCommerce
- * Plugin URI:        https://wordpress.org/plugins/woocommerce-ajaxified-cart/
- * Description:       This Plugins ajaxifies single product page and variable products in shop page.
- * Version:           1.2.2
+ * Plugin Name:       Ajaxified Cart
+ * Plugin URI:        https://wordpress.org/plugins/ajaxified-cart-woocommerce/
+ * Description:       Adds AJAX add-to-cart on single product pages and variable products in shop/archive pages (compatible with WooCommerce, not affiliated).
+ * Version:           2.0.0
  * Author:            Abhishek Kumar
  * Author URI:        http://github.com/abhishekfdd/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       abwc-ajax-cart
  * Domain Path:       /languages
+ * Requires at least: 5.8
+ * Requires PHP:      8.0
+ *
+ * WooCommerce is a registered trademark of Automattic Inc. This plugin is not affiliated with or endorsed by Automattic/WooCommerce.
  */
 
 // If this file is called directly, abort.
@@ -36,7 +40,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 // Codebase version.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_VERSION' ) ) {
-	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '1.0.0' );
+	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '2.0.0' );
 }
 
 // Directory.
@@ -96,6 +100,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-abwc-ajax-cart.php';
 function run_abwc_ajax_cart() {
 
 	$plugin = ABWC_Ajax_Cart::instance();
+
 	return $plugin;
 }
 

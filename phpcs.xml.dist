@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Ajaxified Cart Standards">
+  <description>WordPress Coding Standards for this plugin.</description>
+  <file>./</file>
+  <exclude-pattern>node_modules/*</exclude-pattern>
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <exclude-pattern>assets/js/dist/*</exclude-pattern>
+  <rule ref="WordPress-Core"/>
+  <rule ref="WordPress-Docs"/>
+  <rule ref="WordPress-Extra"/>
+  <config name="testVersion" value="8.0-"/>
+  <arg name="extensions" value="php"/>
+</ruleset>
+

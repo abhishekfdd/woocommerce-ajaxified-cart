@@ -6,172 +6,127 @@
  * @package     ABWC_Ajax_Cart
  */
 
-jQuery( function ( $ ) {
+jQuery(($) => {
+	// Ensure wc_add_to_cart_params exists
+	if (typeof wc_add_to_cart_params === 'undefined') return false;
 
-	// wc_add_to_cart_params is required to continue, ensure the object exists.
-	if ( typeof wc_add_to_cart_params === 'undefined' )
-		return false;
-
-	// Ajax add to cart.
-	$( document ).on( 'click', '.variations_form .single_add_to_cart_button', function ( e ) {
-
+	// Ajax add to cart
+	$(document).on('click', '.variations_form .single_add_to_cart_button', function (e) {
 		e.preventDefault();
 
-		$variation_form = $( this ).closest( '.variations_form' );
-		var var_id = $variation_form.find( 'input[name=variation_id]' ).val();
+		const $variationForm = $(this).closest('.variations_form');
+		const varId = $variationForm.find('input[name=variation_id]').val();
+		const productId = $variationForm.find('input[name=product_id]').val();
+		const quantity = $variationForm.find('input[name=quantity]').val();
 
-		var product_id = $variation_form.find( 'input[name=product_id]' ).val();
-		var quantity = $variation_form.find( 'input[name=quantity]' ).val();
+		$('.ajaxerrors').remove();
+		const item = {};
+		let check = true;
 
-		// attributes = [];.
-		$( '.ajaxerrors' ).remove();
-		var item = { },
-			check = true;
-
-		variations = $variation_form.find( 'select[name^=attribute]' );
-
-		// Updated code to work with radio button - mantish - WC Variations Radio Buttons - 8manos.
-		if ( ! variations.length ) {
-			variations = $variation_form.find( '[name^=attribute]:checked' );
+		let $variations = $variationForm.find('select[name^=attribute]');
+		if (!$variations.length) {
+			$variations = $variationForm.find('[name^=attribute]:checked');
+		}
+		if (!$variations.length) {
+			$variations = $variationForm.find('input[name^=attribute]');
 		}
 
-		// Backup Code for getting input variable.
-		if ( ! variations.length ) {
-			variations = $variation_form.find( 'input[name^=attribute]' );
-		}
+		$variations.each(function () {
+			const $this = $(this);
+			const attributeName = $this.attr('name');
+			const attributeValue = $this.val();
 
-		variations.each( function () {
+			$this.removeClass('error');
 
-			var $this = $( this ),
-				attributeName = $this.attr( 'name' ),
-				attributevalue = $this.val(),
-				index,
-				attributeTaxName;
-
-			$this.removeClass( 'error' );
-
-			if ( attributevalue.length === 0 ) {
-				index = attributeName.lastIndexOf( '_' );
-				attributeTaxName = attributeName.substring( index + 1 );
+			if (!attributeValue) {
+				const index = attributeName.lastIndexOf('_');
+				const attributeTaxName = attributeName.substring(index + 1);
 
 				$this
-					.addClass( 'required error' )
-					.before( '<div class="ajaxerrors"><p>Please select ' + attributeTaxName + '</p></div>' )
-
+					.addClass('required error')
+					.before(`<div class="ajaxerrors"><p>Please select ${attributeTaxName}</p></div>`);
 				check = false;
 			} else {
-				item[attributeName] = attributevalue;
+				item[attributeName] = attributeValue;
 			}
+		});
 
-		} );
+		if (!check) return false;
 
-		if ( ! check ) {
-			return false;
-		}
+		const $thisButton = $(this);
 
-		// AJAX add to cart request.
-		var $thisbutton = $( this );
+		if ($thisButton.is('.variations_form .single_add_to_cart_button')) {
+			$thisButton.removeClass('added').addClass('loading');
 
-		if ( $thisbutton.is( '.variations_form .single_add_to_cart_button' ) ) {
-
-			$thisbutton.removeClass( 'added' );
-			$thisbutton.addClass( 'loading' );
-
-			var data = {
+			const data = {
 				action: 'woocommerce_add_to_cart_variable_rc',
-				product_id: product_id,
-				quantity: quantity,
-				variation_id: var_id,
-				variation: item
+				product_id: productId,
+				quantity,
+				variation_id: varId,
+				variation: item,
+				nonce: ( typeof abwc_ajax_frontend !== 'undefined' ? abwc_ajax_frontend.nonce : '' )
 			};
 
-			// Trigger event.
-			$( 'body' ).trigger( 'adding_to_cart', [ $thisbutton, data ] );
+			$('body').trigger('adding_to_cart', [$thisButton, data]);
 
-			// Ajax action.
-			$.post( wc_add_to_cart_params.ajax_url, data, function ( response ) {
+			$.post(wc_add_to_cart_params.ajax_url, data, (response) => {
+				if (!response) return;
 
-				if ( ! response )
-					return;
+				let thisPage = window.location.toString().replace('add-to-cart', 'added-to-cart');
 
-				var this_page = window.location.toString();
-
-				this_page = this_page.replace( 'add-to-cart', 'added-to-cart' );
-
-				if ( response.error && response.product_url ) {
+				if (response.error && response.product_url) {
 					window.location = response.product_url;
 					return;
 				}
 
-				if ( wc_add_to_cart_params.cart_redirect_after_add === 'yes' ) {
-
+				if (wc_add_to_cart_params.cart_redirect_after_add === 'yes') {
 					window.location = wc_add_to_cart_params.cart_url;
 					return;
+				}
 
-				} else {
+				$thisButton.removeClass('loading').addClass('added');
 
-					$thisbutton.removeClass( 'loading' );
+				const {fragments, cart_hash} = response;
 
-					var fragments = response.fragments;
-					var cart_hash = response.cart_hash;
+				if (fragments) {
+					$.each(fragments, (key) => {
+						$(key).addClass('updating');
+					});
+				}
 
-					// Block fragments class.
-					if ( fragments ) {
-						$.each( fragments, function ( key ) {
-							$( key ).addClass( 'updating' );
-						} );
-					}
+				$('.shop_table.cart, .updating, .cart_totals').fadeTo('400', '0.6').block({
+					message: null,
+					overlayCSS: {opacity: 0.6}
+				});
 
-					// Block widgets and fragments.
-					$( '.shop_table.cart, .updating, .cart_totals' ).fadeTo( '400', '0.6' ).block( {
-						message: null,
-						overlayCSS: {
-							opacity: 0.6
-						}
-					} );
+				if (!wc_add_to_cart_params.is_cart && $thisButton.parent().find('.added_to_cart').length === 0) {
+					$thisButton.after(
+						` <a href="${wc_add_to_cart_params.cart_url}" class="added_to_cart wc-forward" title="${wc_add_to_cart_params.i18n_view_cart}">${wc_add_to_cart_params.i18n_view_cart}</a>`
+					);
+				}
 
-					// Changes button classes.
-					$thisbutton.addClass( 'added' );
+				if (fragments) {
+					$.each(fragments, (key, value) => {
+						$(key).replaceWith(value);
+					});
+				}
 
-					// View cart text.
-					if ( ! wc_add_to_cart_params.is_cart && $thisbutton.parent().find( '.added_to_cart' ).size() === 0 ) {
-						$thisbutton.after( ' <a href="' + wc_add_to_cart_params.cart_url + '" class="added_to_cart wc-forward" title="' +
-						wc_add_to_cart_params.i18n_view_cart + '">' + wc_add_to_cart_params.i18n_view_cart + '</a>' );
-					}
+				$('.widget_shopping_cart, .updating').stop(true).css('opacity', '1').unblock();
 
-					// Replace fragments.
-					if ( fragments ) {
-						$.each( fragments, function ( key, value ) {
-							$( key ).replaceWith( value );
-						} );
-					}
+				$('.shop_table.cart').load(`${thisPage} .shop_table.cart:eq(0) > *`, function () {
+					$('.shop_table.cart').stop(true).css('opacity', '1').unblock();
+					$(document.body).trigger('cart_page_refreshed');
+				});
 
-					// Unblock.
-					$( '.widget_shopping_cart, .updating' ).stop( true ).css( 'opacity', '1' ).unblock();
+				$('.cart_totals').load(`${thisPage} .cart_totals:eq(0) > *`, function () {
+					$('.cart_totals').stop(true).css('opacity', '1').unblock();
+				});
 
-					// Cart page elements.
-					$( '.shop_table.cart' ).load( this_page + ' .shop_table.cart:eq(0) > *', function () {
-
-						$( '.shop_table.cart' ).stop( true ).css( 'opacity', '1' ).unblock();
-
-						$( document.body ).trigger( 'cart_page_refreshed' );
-					} );
-
-					$( '.cart_totals' ).load( this_page + ' .cart_totals:eq(0) > *', function () {
-						$( '.cart_totals' ).stop( true ).css( 'opacity', '1' ).unblock();
-					} );
-
-					// Trigger event so themes can refresh other areas.
-					$( document.body ).trigger( 'added_to_cart', [ fragments, cart_hash, $thisbutton ] );
-				}// End if().
-			} );
+				$(document.body).trigger('added_to_cart', [fragments, cart_hash, $thisButton]);
+			});
 
 			return false;
-
-		} else {
-			return true;
-		}// End if().
-
-	} );
-
-} );
+		}
+		return true;
+	});
+});
