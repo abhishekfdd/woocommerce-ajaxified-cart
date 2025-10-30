@@ -63,7 +63,8 @@ jQuery(($) => {
 				product_id: productId,
 				quantity,
 				variation_id: varId,
-				variation: item
+				variation: item,
+				nonce: ( typeof abwc_ajax_frontend !== 'undefined' ? abwc_ajax_frontend.nonce : '' )
 			};
 
 			$('body').trigger('adding_to_cart', [$thisButton, data]);

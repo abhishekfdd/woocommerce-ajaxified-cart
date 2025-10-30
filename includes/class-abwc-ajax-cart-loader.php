@@ -50,7 +50,7 @@ class ABWC_Ajax_Cart_Loader {
 	/**
 	 * Adds hidden button with product attributes next to add to cart button
 	 *
-	 * @global type $product
+	 * @global WC_Product $product
 	 *
 	 * @since    1.0.0
 	 */
@@ -72,10 +72,23 @@ class ABWC_Ajax_Cart_Loader {
 	 */
 	function abwc_add_to_cart_variable_rc_callback() {
 
-		$product_id        = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['product_id'] ) );
-		$quantity          = empty( $_POST['quantity'] ) ? 1 : apply_filters( 'woocommerce_stock_amount', $_POST['quantity'] );
-		$variation_id      = isset( $_POST['variation_id'] ) ? ( $_POST['variation_id'] ) : '';
-		$variation         = isset( $_POST['variation'] ) ? ( $_POST['variation'] ) : '';
+		// Security: verify nonce.
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
+			wp_send_json( array( 'error' => true, 'product_url' => '', 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+		}
+
+		$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+		$quantity_raw = isset( $_POST['quantity'] ) ? wp_unslash( $_POST['quantity'] ) : 1;
+		$quantity     = empty( $quantity_raw ) ? 1 : wc_stock_amount( wc_clean( $quantity_raw ) );
+		$variation_id = isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : 0;
+		$variation    = array();
+
+		if ( isset( $_POST['variation'] ) && is_array( $_POST['variation'] ) ) {
+			foreach ( $_POST['variation'] as $attr_key => $attr_val ) {
+				$variation[ sanitize_title( wp_unslash( $attr_key ) ) ] = sanitize_text_field( wp_unslash( $attr_val ) );
+			}
+		}
+
 		$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity );
 
 		if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation ) ) {
@@ -86,11 +99,8 @@ class ABWC_Ajax_Cart_Loader {
 				wc_add_to_cart_message( $product_id );
 			}
 
-			// Return fragments.
 			WC_AJAX::get_refreshed_fragments();
 		} else {
-
-			// If there was an error adding to the cart, redirect to the product page to show any errors.
 			$data = array(
 				'error'       => true,
 				'product_url' => apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $product_id ), $product_id ),
@@ -166,13 +176,16 @@ class ABWC_Ajax_Cart_Loader {
 		$dist_path = ABWC_AJAX_CART_PLUGIN_DIR . 'assets/js/dist/';
 		$dist_url  = ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/dist/';
 
-		// Simple product/cart script.
-		$main_file = is_readable( $dist_path . 'abwc-ajax-cart.min.js' ) ? $dist_url . 'abwc-ajax-cart.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.js';
-		// Variation script.
+		$main_file      = is_readable( $dist_path . 'abwc-ajax-cart.min.js' ) ? $dist_url . 'abwc-ajax-cart.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-cart.js';
 		$variation_file = is_readable( $dist_path . 'abwc-ajax-variation-cart.min.js' ) ? $dist_url . 'abwc-ajax-variation-cart.min.js' : ABWC_AJAX_CART_PLUGIN_URL . 'assets/js/abwc-ajax-variation-cart.js';
 
 		wp_enqueue_script( 'abwc-ajax-js', $main_file, array( 'jquery', 'wc-add-to-cart' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
 		wp_enqueue_script( 'abwc-ajax-variation-js', $variation_file, array( 'jquery', 'wc-add-to-cart' ), ABWC_AJAX_CART_PLUGIN_VERSION, true );
+
+		// Localize security + data for variation ajax.
+		wp_localize_script( 'abwc-ajax-variation-js', 'abwc_ajax_frontend', array(
+			'nonce' => wp_create_nonce( 'abwc_add_to_cart' ),
+		) );
 	}
 
 	/**

@@ -1,7 +1,8 @@
 === “Ajaxified Cart plugin for eCommerce stores (compatible with WooCommerce)” ===
 Contributors: abhishekfdd
 Tags: woocommerce, ajax, cart
-Requires at least: 3.0.1
+Requires at least: 5.8
+Requires PHP: 7.4
 Tested up to: 6.6.2
 Stable tag: 2.0.0
 License: GPLv2 or later
