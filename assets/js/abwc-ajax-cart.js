@@ -262,7 +262,7 @@ jQuery(($) => {
 		$.post(abwc_ajax_frontend.ajax_url, { action: 'abwc_get_variable_form', product_id: pid, nonce: abwc_ajax_frontend.nonce })
 			.done(resp => {
 				if (resp && resp.success && resp.data && resp.data.html) {
-					$modal.find('.abwc-variable-modal__inner').html('<button type="button" class="abwc-close" aria-label="'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.close : 'Close') +'" style="position:absolute;top:8px;right:8px;">'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.close : '×') +'</button>' + resp.data.html + '<p style="margin-top:12px;text-align:right;"><a href="#" class="abwc-refresh">Refresh</a></p>');
+					$modal.find('.abwc-variable-modal__inner').html('<button type="button" class="abwc-close" aria-label="'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.close : 'Close') +'" style="position:absolute;top:8px;right:8px;">'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.close : '×') +'</button>' + resp.data.html + '<p style="margin-top:12px;text-align:right;"><a href="#" class="abwc-refresh">'+ (abwc_ajax_frontend.i18n ? abwc_ajax_frontend.i18n.refresh : 'Refresh') +'</a></p>');
 					$modal.attr('data-loading','false');
 					$modal.find('.variations_form').wc_variation_form();
 					abwcShowModal();

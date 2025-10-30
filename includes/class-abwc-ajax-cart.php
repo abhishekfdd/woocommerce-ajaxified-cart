@@ -51,7 +51,7 @@ class ABWC_Ajax_Cart {
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
-	 * @access   protected
+	 * @access   public
 	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
 	public $plugin_name;
@@ -199,14 +199,11 @@ class ABWC_Ajax_Cart {
 	}
 
 	/**
-	 * Convenience function to access plugin options, returns false by default
+	 * Convenience function to access plugin options, returns null if missing.
 	 *
-	 * @param string $key Option key
-	 *
-	 * @return mixed Option value (false if none/default)
-	 *
-	 * @since  1.2.0
-	 *
+	 * @param string $key Option key.
+	 * @return mixed|null Option value or null if not set.
+	 * @since 1.2.0
 	 */
 	public function option( $key ) {
 		$key    = strtolower( $key );
