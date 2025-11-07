@@ -5,11 +5,11 @@ const path = require('path');
 const wpPot = require('wp-pot');
 
 const root = process.cwd();
-const dest = path.join(root, 'languages', 'abwc-ajax-cart.pot');
+const dest = path.join(root, 'languages', 'ajaxified-cart-woocommerce.pot');
 try {
   wpPot({
     package: 'Ajaxified Cart for Online Stores',
-    domain: 'abwc-ajax-cart',
+    domain: 'ajaxified-cart-woocommerce',
     src: '**/*.php',
     writeToFile: dest,
     commentKeyword: 'translators:'
@@ -38,7 +38,7 @@ try {
           `"Content-Type: text/plain; charset=UTF-8\\n"`,
           `"Content-Transfer-Encoding: 8bit\\n"`,
           `"X-Generator: wp-pot (programmatic)\\n"`,
-          `"X-Domain: abwc-ajax-cart\\n"`,
+          `"X-Domain: ajaxified-cart-woocommerce\\n"`,
           `"Last-Translator: Abhishek Kumar <abhishekfdd@gmail.com>\\n"`,
           `"Language-Team: Abhishek Kumar <abhishekfdd@gmail.com>\\n"`,
           `"Plural-Forms: nplurals=2; plural=(n != 1);\\n"`

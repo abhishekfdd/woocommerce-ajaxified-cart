@@ -84,7 +84,7 @@ class ABWC_Ajax_Cart_Loader {
 
 		// Security: verify nonce.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
-			wp_send_json_error( array( 'product_url' => '', 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'product_url' => '', 'message' => __( 'Security check failed.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 
 		$product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
@@ -206,12 +206,12 @@ class ABWC_Ajax_Cart_Loader {
 	 */
 	public function abwc_get_variable_form() {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 		$product_id  = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
 		$product_obj = wc_get_product( $product_id );
 		if ( ! $product_obj || ! $product_obj->is_type( 'variable' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid product.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid product.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 		global $product, $post; // Set globals for WooCommerce template functions.
 		$product = $product_obj; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -235,12 +235,12 @@ class ABWC_Ajax_Cart_Loader {
 	 */
 	public function abwc_get_variable_form_by_slug() {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'abwc_add_to_cart' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 		$slug_raw = isset( $_POST['product_slug'] ) ? wp_unslash( $_POST['product_slug'] ) : '';
 		$slug     = sanitize_title( $slug_raw );
 		if ( empty( $slug ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid product slug.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid product slug.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 		$post = get_page_by_path( $slug, OBJECT, 'product' );
 		if ( ! $post ) {
@@ -251,11 +251,11 @@ class ABWC_Ajax_Cart_Loader {
 			wp_reset_postdata();
 		}
 		if ( ! $post ) {
-			wp_send_json_error( array( 'message' => __( 'Product not found.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Product not found.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 		$product_obj = wc_get_product( $post->ID );
 		if ( ! $product_obj || ! $product_obj->is_type( 'variable' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Not a variable product.', 'abwc-ajax-cart' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Not a variable product.', 'ajaxified-cart-woocommerce' ) ) );
 		}
 		global $product, $post; // Set globals for WooCommerce template functions.
 		$product = $product_obj; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -293,12 +293,12 @@ class ABWC_Ajax_Cart_Loader {
 			'nonce'    => wp_create_nonce( 'abwc_add_to_cart' ),
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'i18n' => array(
-				'loading'           => __( 'Loading options…', 'abwc-ajax-cart' ),
-				'close'             => __( 'Close', 'abwc-ajax-cart' ),
-				'error'             => __( 'Unable to load options.', 'abwc-ajax-cart' ),
-				'not_variable'      => __( 'Product is not variable.', 'abwc-ajax-cart' ),
-				'product_missing'   => __( 'Product not found.', 'abwc-ajax-cart' ),
-				'selectOptionsText' => __( 'Select options', 'abwc-ajax-cart' ),
+				'loading'           => __( 'Loading options…', 'ajaxified-cart-woocommerce' ),
+				'close'             => __( 'Close', 'ajaxified-cart-woocommerce' ),
+				'error'             => __( 'Unable to load options.', 'ajaxified-cart-woocommerce' ),
+				'not_variable'      => __( 'Product is not variable.', 'ajaxified-cart-woocommerce' ),
+				'product_missing'   => __( 'Product not found.', 'ajaxified-cart-woocommerce' ),
+				'selectOptionsText' => __( 'Select options', 'ajaxified-cart-woocommerce' ),
 			),
 		) );
 		wp_enqueue_style( 'abwc-modal', ABWC_AJAX_CART_PLUGIN_URL . 'assets/css/abwc-modal.css', array(), ABWC_AJAX_CART_PLUGIN_VERSION );

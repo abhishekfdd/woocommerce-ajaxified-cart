@@ -33,7 +33,7 @@ class ABWC_Ajax_Cart_I18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'abwc-ajax-cart', false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			'ajaxified-cart-woocommerce', false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
 	}
 

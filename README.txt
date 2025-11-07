@@ -1,15 +1,15 @@
 === Ajaxified Cart ===
 Contributors: abhishekfdd
 Donate link: https://github.com/abhishekfdd
-Tags: woocommerce, ajax, cart, add to cart, variable products, block themes, gutenberg
+Tags: woocommerce, ajax, cart, add to cart, block themes
 Requires at least: 5.8
-Tested up to: 6.8.3
+Tested up to: 6.8
 Requires PHP: 8.0
 Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A lightweight plugin that adds AJAX add-to-cart for single products and variable products directly on archive (shop / product collection) pages, including support for modern block (FSE) themes.
+AJAX add-to-cart for WooCommerce: simple + variable products on archive & block listings via accessible modal and instant mini-cart refresh.
 
 == Description ==
 WooCommerce core does not provide AJAX add-to-cart on the single product page or for variable products listed on archive pages (it redirects to the single view). This plugin adds an unobtrusive AJAX workflow for:
@@ -30,7 +30,7 @@ Highlights:
 Privacy: This plugin does not send any data to external services. It only uses WooCommerce cart/session APIs.
 
 == Installation ==
-1. Upload the `abwc-ajax-cart` folder to `/wp-content/plugins/`.
+1. Upload the `ajaxified-cart-woocommerce` folder to `/wp-content/plugins/`.
 2. Activate the plugin through the "Plugins" menu in WordPress.
 3. (Optional) Visit Settings > General > Ajaxified Cart to enable variable product archive AJAX.
 4. Build assets (only if developing): `npm install && npm run build`.
@@ -52,7 +52,7 @@ Typically no. Ensure the localized nonce is not stripped and that minification d
 Yes. Options are deleted across sites on uninstall.
 
 = How are translations handled? =
-Run `npm run pot` to regenerate `languages/abwc-ajax-cart.pot`. Add your `.po` / `.mo` files in the `languages` folder.
+Run `npm run pot` to regenerate `languages/ajaxified-cart-woocommerce.pot`. Add your `.po` / `.mo` files in the `languages` folder.
 
 == Screenshots ==
 1. Variable product modal on block-based archive

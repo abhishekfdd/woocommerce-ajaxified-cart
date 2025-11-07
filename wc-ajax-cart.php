@@ -20,7 +20,7 @@
  * Author URI:        http://github.com/abhishekfdd/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       abwc-ajax-cart
+ * Text Domain:       ajaxified-cart-woocommerce
  * Domain Path:       /languages
  * Requires at least: 5.8
  * Requires PHP:      8.0
