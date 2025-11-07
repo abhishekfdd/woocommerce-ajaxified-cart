@@ -41,7 +41,7 @@ class ABWC_Ajax_Cart_Admin {
 	 * @return mixed      Option value
 	 */
 	public function option( $key ) {
-		$value = run_abwc_ajax_cart()->option( $key );
+		$value = abwc_ajax_cart_run()->option( $key );
 		return $value;
 	}
 
@@ -50,7 +50,7 @@ class ABWC_Ajax_Cart_Admin {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @uses run_abwc_ajax_cart() Get options from main Ajaxified_Admin class
+	 * @uses abwc_ajax_cart_run() Get options from main Ajaxified_Admin class
 	 * @uses is_admin() Ensures we're in the admin area
 	 * @uses curent_user_can() Checks for permissions
 	 * @uses add_action() Add hooks
@@ -122,7 +122,7 @@ class ABWC_Ajax_Cart_Admin {
 		?>
 		<div class="wrap">
 			<h2><?php esc_html_e( 'Ajaxified Cart', 'ajaxified-cart-woocommerce' ); ?></h2>
-			<form action="options.php" method="post" class="abwc-ajax-settings-form">
+			<form action="options.php" method="post" class="abwc-ajax-settings-form"> <!-- phpcs:ignore Generic.Commenting.Todo.TaskFound -->
 				<?php
 				settings_fields( 'abwc_ajax_plugin_options' );
 				do_settings_sections( 'abwc_ajaxified_settings' );
@@ -157,14 +157,14 @@ class ABWC_Ajax_Cart_Admin {
 	
 	/**
 	 * Adds setting link
-	 * 
-	 * @param array $links
-	 * @return string
+	 *
+	 * @param string[] $links Existing action links.
+	 * @return string[] Modified links array.
 	 */
-	function plugin_settings_link( $links ) {
+	function plugin_settings_link( array $links ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamTag
 		$settings_url = admin_url( 'options-general.php?page=abwc_ajaxified_settings' );
 		$links[]      = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'ajaxified-cart-woocommerce' ) . '</a>';
-		return $links;
+		return $links; // phpcs:ignore WordPress.Arrays.ArrayReturnType.NotString
 	}
 
 }

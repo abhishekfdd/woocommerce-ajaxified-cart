@@ -104,15 +104,15 @@ class ABWC_Ajax_Cart_Loader {
 		}
 
 		$product_id   = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0; // Sanitized & unslashed.
-		$quantity_raw = isset( $_POST['quantity'] ) ? sanitize_text_field( wp_unslash( $_POST['quantity'] ) ) : '1'; // Sanitize at source.
-		$quantity_raw = preg_replace( '/[^0-9.]/', '', $quantity_raw ); // Keep numeric only.
+		$quantity_raw = isset( $_POST['quantity'] ) ? sanitize_text_field( wp_unslash( $_POST['quantity'] ) ) : '1';
+		$quantity_raw = preg_replace( '/[^0-9.]/', '', $quantity_raw );
 		$quantity     = ( '' === $quantity_raw ) ? 1 : wc_stock_amount( $quantity_raw );
 		$variation_id = isset( $_POST['variation_id'] ) ? absint( wp_unslash( $_POST['variation_id'] ) ) : 0; // Sanitized & unslashed.
 		$variation    = array();
 
-		$variation_input = ( isset( $_POST['variation'] ) && is_array( $_POST['variation'] ) ) ? wp_unslash( $_POST['variation'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below.
-		if ( ! empty( $variation_input ) ) {
-			foreach ( $variation_input as $attr_key => $attr_val ) {
+		$variation_input_raw = ( isset( $_POST['variation'] ) && is_array( $_POST['variation'] ) ) ? wp_unslash( $_POST['variation'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below.
+		if ( ! empty( $variation_input_raw ) ) {
+			foreach ( $variation_input_raw as $attr_key => $attr_val ) {
 				$sanitized_key = sanitize_title( $attr_key );
 				$sanitized_val = sanitize_text_field( $attr_val );
 				$variation[ $sanitized_key ] = $sanitized_val;
@@ -130,11 +130,11 @@ class ABWC_Ajax_Cart_Loader {
 			}
 		}
 
-		$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity );
+		$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core filter.
 
 		if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation ) ) {
 
-			do_action( 'woocommerce_ajax_added_to_cart', $product_id );
+			do_action( 'woocommerce_ajax_added_to_cart', $product_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core action.
 
 			if ( 'yes' === get_option( 'woocommerce_cart_redirect_after_add' ) ) {
 				wc_add_to_cart_message( $product_id );
@@ -144,7 +144,7 @@ class ABWC_Ajax_Cart_Loader {
 		} else {
 			$data = array(
 				'error'       => true,
-				'product_url' => apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $product_id ), $product_id ),
+				'product_url' => apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $product_id ), $product_id ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core filter.
 			);
 			wp_send_json( $data );
 		}
@@ -159,7 +159,7 @@ class ABWC_Ajax_Cart_Loader {
 	 */
 	function abwc_variable_product_archive_ajax() {
 
-		$category_page = run_abwc_ajax_cart()->option( 'enable_on_archive_page' );
+		$category_page = abwc_ajax_cart_run()->option( 'enable_on_archive_page' );
 
 		if ( ! isset( $category_page ) || ( isset( $category_page ) && 'yes' !== $category_page ) ) {
 			return;
@@ -167,16 +167,9 @@ class ABWC_Ajax_Cart_Loader {
 
 		if ( ! function_exists( 'woocommerce_template_loop_add_to_cart' ) ) {
 
-			/**
-			 * Get the add to cart template for the loop.
-			 *
-			 * @param array $args args for the function.
-			 *
-			 * @subpackage    Loop
-			 *
-			 */
-			function woocommerce_template_loop_add_to_cart( $args = array() ) {
-				global $product;
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Providing WooCommerce fallback function when core not loaded.
+			function woocommerce_template_loop_add_to_cart( $args = array() ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+				global $product; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce global.
 
 				if ( $product ) {
 					$defaults = array(
@@ -195,7 +188,7 @@ class ABWC_Ajax_Cart_Loader {
 						),
 					);
 
-					$args = apply_filters( 'woocommerce_loop_add_to_cart_args', wp_parse_args( $args, $defaults ), $product );
+					$args = apply_filters( 'woocommerce_loop_add_to_cart_args', wp_parse_args( $args, $defaults ), $product ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core filter.
 
 					if ( 'variable' === $product->get_type() ) {
 						woocommerce_variable_add_to_cart();
@@ -219,7 +212,7 @@ class ABWC_Ajax_Cart_Loader {
 			return $block_content;
 		}
 		if ( isset( $block['blockName'] ) && 'woocommerce/product-button' === $block['blockName'] ) {
-			global $product;
+			global $product; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce global.
 			if ( $product instanceof WC_Product && $product->is_type( 'variable' ) ) {
 				// Ensure data-abwc-variable attribute is present on first anchor.
 				if ( false === strpos( $block_content, 'data-abwc-variable="1"' ) ) {
@@ -244,8 +237,8 @@ class ABWC_Ajax_Cart_Loader {
 		if ( ! $product_obj || ! $product_obj->is_type( 'variable' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid product.', 'ajaxified-cart-woocommerce' ) ) );
 		}
-		global $product, $post; // Set globals for WooCommerce template functions.
-		$product = $product_obj; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		global $product, $post; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce globals required for template.
+		$product = $product_obj; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound, WordPress.WP.GlobalVariablesOverride.Prohibited -- overriding WooCommerce global intentionally.
 		$post    = get_post( $product_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		if ( $post ) {
 			setup_postdata( $post );
@@ -287,8 +280,8 @@ class ABWC_Ajax_Cart_Loader {
 		if ( ! $product_obj || ! $product_obj->is_type( 'variable' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Not a variable product.', 'ajaxified-cart-woocommerce' ) ) );
 		}
-		global $product, $post; // Set globals for WooCommerce template functions.
-		$product = $product_obj; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		global $product, $post; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce globals required for template.
+		$product = $product_obj; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound, WordPress.WP.GlobalVariablesOverride.Prohibited -- overriding WooCommerce global intentionally.
 		$post    = get_post( $product_obj->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		if ( $post ) {
 			setup_postdata( $post );
@@ -364,7 +357,7 @@ class ABWC_Ajax_Cart_Loader {
 		}
 		$product_id = $product->get_id();
 		// Add a hidden marker + enhance any product-button anchor/button tag.
-		$marker = '<input type="hidden" class="abwc-block-variable-product" data-product_id="' . esc_attr( $product_id ) . '" data-abwc-variable="1" />';
+		$marker = '<input type="hidden" class="abwc-block-variable-product" data-product_id="' . esc_attr( $product_id ) . '" data-abwc-variable="1" />'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- data attribute follows WooCommerce naming conventions.
 		// Inject data attributes into the first anchor/button with product link if not already added.
 		$pattern = '/<(a|button)\b([^>]*)(href|class)[^>]*>(.*?)<\/\1>/is';
 		$modified = preg_replace_callback( $pattern, function( $matches ) use ( $product_id ) {

@@ -129,7 +129,7 @@ class ABWC_Ajax_Cart {
 	 *
 	 * @since 1.0.0
 	 * @see ABWC_Ajax_Cart::instance()
-	 * @see run_abwc_ajax_cart()
+	 * @see abwc_ajax_cart_run()
 	 */
 	private function __construct() {
 		/* nothing here */

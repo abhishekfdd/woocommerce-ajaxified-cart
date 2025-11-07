@@ -5,11 +5,11 @@ Tags: woocommerce, ajax, cart, add to cart, block themes
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Seamless AJAX add‑to‑cart for WooCommerce: simple & variable products (archive + blocks) with accessible modal, fast fragments, zero reloads lean UX!
+AJAX add-to-cart for WooCommerce: simple & variable products on archives/blocks via accessible modal and instant cart refresh.
 
 == Description ==
 WooCommerce core does not provide AJAX add-to-cart on the single product page or for variable products listed on archive pages (it redirects to the single view). This plugin adds an unobtrusive AJAX workflow for:
@@ -49,7 +49,7 @@ Yes. Override or enqueue your own CSS after `abwc-modal` or copy the CSS file an
 Typically no. Ensure the localized nonce is not stripped and that minification does not remove required data attributes.
 
 = Does it support multi-site? =
-Yes. Options are deleted across sites on uninstall.
+Yes, it works on multi-site installations.
 
 = How are translations handled? =
 They are served automatically from WordPress.org language packs; no manual tools or bundled .mo files are needed.
@@ -61,6 +61,13 @@ They are served automatically from WordPress.org language packs; no manual tools
 (Provide actual screenshot images named screenshot-1.png, screenshot-2.png before submitting.)
 
 == Changelog ==
+= 2.0.2 =
+* Fix: Prefixed bootstrap variable for URL to satisfy WPCS global prefix rule.
+* Tweak: Shorter plugin header/tagline (<150 chars) for WordPress.org guidelines.
+* Security: Refinement of variation attribute sanitization (removed phpcs ignore, explicit key/value cleanup).
+* Cleanup: Removed unused POT tooling file and generator script; relies on WP.org language packs.
+* Cleanup: Removed uninstall references/documentation.
+
 = 2.0.1 =
 * Security: Strengthened sanitization for quantity, variation data, product slug, and variation_id validation.
 * Added Requires Plugins header for explicit WooCommerce dependency.
