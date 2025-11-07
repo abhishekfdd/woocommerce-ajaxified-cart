@@ -25,7 +25,6 @@ Highlights:
 * Settings page to enable/disable variable product archive functionality
 * Block theme compatibility (intercepts "Select options" buttons) with slug/product_id fallback
 * Performance-minded (loads minified bundles built via Webpack; falls back to source if missing)
-* Uninstall script cleans stored options
 * Translations auto-loaded from WordPress.org (no manual POT/PO generation required)
 
 Privacy: This plugin does not send any data to external services. It only uses WooCommerce cart/session APIs.
@@ -71,7 +70,7 @@ They are served automatically from WordPress.org language packs; no manual tools
 * Accessibility: Focus trap, ESC close, refresh link, restored focus to triggering button, improved modal semantics.
 * Internationalization: Auto-load via WordPress.org (removed manual textdomain loader & POT tooling).
 * Styling: Introduced dedicated modal stylesheet (abwc-modal.css).
-* Compliance: Uninstall cleanup, ABSPATH guards across files, WPCS docblock adjustments, sanitized settings.
+* Compliance: ABSPATH guards across files, WPCS docblock adjustments, sanitized settings.
 * Fallback logic: Ensures dist minified JS used when available, source files otherwise.
 
 = 1.0.0 =
