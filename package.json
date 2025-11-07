@@ -1,11 +1,9 @@
 {
-    "name": "UserBlog",
+    "name": "ajaxified-cart",
     "private": true,
     "scripts": {
         "build": "webpack --mode=production",
         "watch": "webpack --watch --mode=development",
-        "pot": "node scripts/generate-pot.js",
-        "mo": "find languages -name '*.po' -exec sh -c 'for f; do msgfmt \"$f\" -o \"${f%.po}.mo\"; done' sh {} +",
         "lint": "eslint assets/js/abwc-ajax-cart.js assets/js/abwc-ajax-variation-cart.js assets/js/abwc-ajax-cart-admin.js"
     },
     "devDependencies": {
@@ -15,7 +13,6 @@
         "core-js": "^3.46.0",
         "webpack": "^5.94.0",
         "webpack-cli": "^5.1.4",
-        "wp-pot": "^1.10.0",
         "eslint": "^9.11.0"
     },
     "browserslist": [
