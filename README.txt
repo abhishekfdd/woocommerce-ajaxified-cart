@@ -5,7 +5,7 @@ Tags: woocommerce, ajax, cart, add to cart, block themes
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,12 @@ They are served automatically from WordPress.org language packs; no manual tools
 (Provide actual screenshot images named screenshot-1.png, screenshot-2.png before submitting.)
 
 == Changelog ==
+= 2.0.1 =
+* Security: Strengthened sanitization for quantity, variation data, product slug, and variation_id validation.
+* Added Requires Plugins header for explicit WooCommerce dependency.
+* Escaped output of hidden AJAX input via wp_kses.
+* Removed legacy translation loader & uninstall cleanup code; simplified README.
+
 = 2.0.0 =
 * Build migration: moved from Grunt to Webpack (minified bundles + source fallback).
 * Performance & code structure improvements.

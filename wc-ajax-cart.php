@@ -15,7 +15,7 @@
  * Plugin Name:       Ajaxified Cart
  * Plugin URI:        https://wordpress.org/plugins/ajaxified-cart-woocommerce/
  * Description:       AJAX add-to-cart for WooCommerce: simple + variable products on archives & blocks via accessible modal and instant cart updates.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Abhishek Kumar
  * Author URI:        http://github.com/abhishekfdd/
  * License:           GPL-2.0+
@@ -23,6 +23,7 @@
  * Text Domain:       ajaxified-cart-woocommerce
  * Requires at least: 5.8
  * Requires PHP:      8.0
+ * Requires Plugins:  woocommerce
  *
  * Note: Translations are auto-loaded from WP.org language packs (no Domain Path / manual loader required).
  *
@@ -41,7 +42,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 // Codebase version.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_VERSION' ) ) {
-	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '2.0.0' );
+	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '2.0.1' );
 }
 
 // Directory.
