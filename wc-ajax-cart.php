@@ -14,16 +14,18 @@
  * @wordpress-plugin
  * Plugin Name:       Ajaxified Cart
  * Plugin URI:        https://wordpress.org/plugins/ajaxified-cart-woocommerce/
- * Description:       Adds AJAX add-to-cart on single product pages and variable products in shop/archive pages (compatible with WooCommerce, not affiliated).
- * Version:           2.0.0
+ * Description:       AJAX add-to-cart for WooCommerce: simple & variable products on archives & blocks via accessible modal and instant cart refresh.
+ * Version:           2.0.2
  * Author:            Abhishek Kumar
  * Author URI:        http://github.com/abhishekfdd/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       abwc-ajax-cart
- * Domain Path:       /languages
+ * Text Domain:       ajaxified-cart-woocommerce
  * Requires at least: 5.8
  * Requires PHP:      8.0
+ * Requires Plugins:  woocommerce
+ *
+ * Note: Translations are auto-loaded from WP.org language packs (no Domain Path / manual loader required).
  *
  * WooCommerce is a registered trademark of Automattic Inc. This plugin is not affiliated with or endorsed by Automattic/WooCommerce.
  */
@@ -40,7 +42,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 // Codebase version.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_VERSION' ) ) {
-	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '2.0.0' );
+	define( 'ABWC_AJAX_CART_PLUGIN_VERSION', '2.0.2' );
 }
 
 // Directory.
@@ -50,14 +52,11 @@ if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_DIR' ) ) {
 
 // Url.
 if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_URL' ) ) {
-	$plugin_url = plugin_dir_url( __FILE__ );
-
-	// If we're using https, update the protocol.
+	$abwc_ajax_cart_plugin_url = plugin_dir_url( __FILE__ );
 	if ( is_ssl() ) {
-		$plugin_url = str_replace( 'http://', 'https://', $plugin_url );
+		$abwc_ajax_cart_plugin_url = str_replace( 'http://', 'https://', $abwc_ajax_cart_plugin_url );
 	}
-
-	define( 'ABWC_AJAX_CART_PLUGIN_URL', $plugin_url );
+	define( 'ABWC_AJAX_CART_PLUGIN_URL', $abwc_ajax_cart_plugin_url );
 }
 
 // File.
@@ -75,12 +74,12 @@ if ( ! defined( 'ABWC_AJAX_CART_PLUGIN_FILE' ) ) {
  * The code that runs during plugin activation.
  * This action is documented in includes/class-abwc-ajax-cart-activator.php
  */
-function activate_abwc_ajax_cart() {
+function abwc_ajax_cart_activate() { // Renamed from activate_abwc_ajax_cart for prefix-first compliance.
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-abwc-ajax-cart-activator.php';
 	ABWC_Ajax_Cart_Activator::activate();
 }
 
-register_activation_hook( __FILE__, 'activate_abwc_ajax_cart' );
+register_activation_hook( __FILE__, 'abwc_ajax_cart_activate' );
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -97,11 +96,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-abwc-ajax-cart.php';
  *
  * @since    1.0.0
  */
-function run_abwc_ajax_cart() {
-
+function abwc_ajax_cart_run() { // Renamed from run_abwc_ajax_cart for WPCS prefix compliance.
 	$plugin = ABWC_Ajax_Cart::instance();
-
 	return $plugin;
 }
 
-run_abwc_ajax_cart();
+abwc_ajax_cart_run();

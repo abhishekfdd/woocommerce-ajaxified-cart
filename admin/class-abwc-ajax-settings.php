@@ -41,7 +41,7 @@ class ABWC_Ajax_Cart_Admin {
 	 * @return mixed      Option value
 	 */
 	public function option( $key ) {
-		$value = run_abwc_ajax_cart()->option( $key );
+		$value = abwc_ajax_cart_run()->option( $key );
 		return $value;
 	}
 
@@ -50,7 +50,7 @@ class ABWC_Ajax_Cart_Admin {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @uses run_abwc_ajax_cart() Get options from main Ajaxified_Admin class
+	 * @uses abwc_ajax_cart_run() Get options from main Ajaxified_Admin class
 	 * @uses is_admin() Ensures we're in the admin area
 	 * @uses curent_user_can() Checks for permissions
 	 * @uses add_action() Add hooks
@@ -73,7 +73,7 @@ class ABWC_Ajax_Cart_Admin {
 	 * @uses add_options_page() Add plugin settings page
 	 */
 	public function admin_menu() {
-		add_submenu_page( 'options-general.php', __( 'Ajaxified Cart', 'abwc-ajax-cart' ), __( 'Ajaxified Cart', 'abwc-ajax-cart' ), 'manage_options', 'abwc_ajaxified_settings', array( $this, 'options_page' ) );
+		add_submenu_page( 'options-general.php', __( 'Ajaxified Cart', 'ajaxified-cart-woocommerce' ), __( 'Ajaxified Cart', 'ajaxified-cart-woocommerce' ), 'manage_options', 'abwc_ajaxified_settings', array( $this, 'options_page' ) );
 	}
 
 	/**
@@ -88,9 +88,9 @@ class ABWC_Ajax_Cart_Admin {
 	public function admin_init() {
 
 		register_setting( 'abwc_ajax_plugin_options', 'abwc_ajax_plugin_options', array( $this, 'plugin_options_validate' ) );
-		add_settings_section( 'general_section', __( 'General Settings', 'abwc-ajax-cart' ), array( $this, 'section_general' ), 'abwc_ajaxified_settings' );
+		add_settings_section( 'general_section', __( 'General Settings', 'ajaxified-cart-woocommerce' ), array( $this, 'section_general' ), 'abwc_ajaxified_settings' );
 
-		add_settings_field( 'enable_on_archive_page', __( 'Enable on archive page', 'abwc-ajax-cart' ), array( $this, 'enable_on_archive_page_option' ), 'abwc_ajaxified_settings', 'general_section' );
+		add_settings_field( 'enable_on_archive_page', __( 'Enable on archive page', 'ajaxified-cart-woocommerce' ), array( $this, 'enable_on_archive_page_option' ), 'abwc_ajaxified_settings', 'general_section' );
 	}
 
 	/**
@@ -102,7 +102,7 @@ class ABWC_Ajax_Cart_Admin {
 		?>
 		<label>
 			<input type='checkbox' name='abwc_ajax_plugin_options[enable_on_archive_page]' value="yes" <?php checked( $enable_on_archive, 'yes' ); ?> />
-			<?php esc_html_e( 'Enable ajaxified cart for variable products on archive page', 'abwc-ajax-cart' ); ?>
+			<?php esc_html_e( 'Enable ajaxified cart for variable products on archive page', 'ajaxified-cart-woocommerce' ); ?>
 		</label>
 		<?php
 	}
@@ -121,14 +121,14 @@ class ABWC_Ajax_Cart_Admin {
 	public function options_page() {
 		?>
 		<div class="wrap">
-			<h2><?php esc_html_e( 'Ajaxified Cart', 'abwc-ajax-cart' ); ?></h2>
-			<form action="options.php" method="post" class="abwc-ajax-settings-form">
+			<h2><?php esc_html_e( 'Ajaxified Cart', 'ajaxified-cart-woocommerce' ); ?></h2>
+			<form action="options.php" method="post" class="abwc-ajax-settings-form"> <!-- phpcs:ignore Generic.Commenting.Todo.TaskFound -->
 				<?php
 				settings_fields( 'abwc_ajax_plugin_options' );
 				do_settings_sections( 'abwc_ajaxified_settings' );
 				?>
 				<p class="submit">
-					<input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'abwc-ajax-cart' ); ?>" />
+					<input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'ajaxified-cart-woocommerce' ); ?>" />
 				</p>
 
 			</form>
@@ -157,14 +157,14 @@ class ABWC_Ajax_Cart_Admin {
 	
 	/**
 	 * Adds setting link
-	 * 
-	 * @param array $links
-	 * @return string
+	 *
+	 * @param string[] $links Existing action links.
+	 * @return string[] Modified links array.
 	 */
-	function plugin_settings_link( $links ) {
+	function plugin_settings_link( array $links ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamTag
 		$settings_url = admin_url( 'options-general.php?page=abwc_ajaxified_settings' );
-		$links[]      = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'abwc-ajax-cart' ) . '</a>';
-		return $links;
+		$links[]      = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'ajaxified-cart-woocommerce' ) . '</a>';
+		return $links; // phpcs:ignore WordPress.Arrays.ArrayReturnType.NotString
 	}
 
 }

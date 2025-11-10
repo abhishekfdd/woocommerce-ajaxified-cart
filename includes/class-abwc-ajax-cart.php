@@ -1,5 +1,11 @@
 <?php
 /**
+ * ABWC Ajaxified Cart
+ *
+ * @package ABWC_Ajax_Cart
+ */
+
+/**
  * The file that defines the core plugin class
  *
  * A class definition that includes attributes and functions used across both the
@@ -23,7 +29,7 @@
  * @since      1.0.0
  * @package    ABWC_Ajax_Cart
  * @subpackage ABWC_Ajax_Cart/includes
- * @author     Abhishek Kumar <abhishekfdd@gmail.com>
+ * @author     Abhishek Kumar (abhishekfdd@gmail.com)
  */
 class ABWC_Ajax_Cart {
 
@@ -82,20 +88,10 @@ class ABWC_Ajax_Cart {
 	/**
 	 * Main Ajaxified Cart Instance.
 	 *
-	 * Ajaxified Cart is great
-	 * Please load it only one time
-	 * For this, we thank you
+	 * Ensures that only one instance exists.
 	 *
-	 * Insures that only one instance of Ajaxified Cart exists in memory at any
-	 * one time. Also prevents needing to define globals all over the place.
-	 *
-	 * @return Ajaxified Cart.
-	 * @uses ABWC_Ajax_Cart::setup() Setup the require functions.
-	 * @see  run_abwc_ajax_cart()
-	 *
+	 * @return ABWC_Ajax_Cart Instance of the plugin main class.
 	 * @since 1.2.0
-	 *
-	 * @static object $instance
 	 */
 	public static function instance() {
 		// Store the instance locally to avoid private static replication
@@ -133,7 +129,7 @@ class ABWC_Ajax_Cart {
 	 *
 	 * @since 1.0.0
 	 * @see ABWC_Ajax_Cart::instance()
-	 * @see run_abwc_ajax_cart()
+	 * @see abwc_ajax_cart_run()
 	 */
 	private function __construct() {
 		/* nothing here */
@@ -145,7 +141,7 @@ class ABWC_Ajax_Cart {
 	 * Include the following files that make up the plugin:
 	 *
 	 * - ABWC_Ajax_Cart_Loader. Orchestrates the hooks of the plugin.
-	 * - ABWC_Ajax_Cart_I18n. Defines internationalization functionality.
+	 * - ABWC_Ajax_Cart_Admin. Defines admin settings functionality.
 	 *
 	 * Create an instance of the loader
 	 *
@@ -159,12 +155,6 @@ class ABWC_Ajax_Cart {
 		 * core plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-abwc-ajax-cart-loader.php';
-
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-abwc-ajax-cart-i18n.php';
 
 		/**
 		 * The class responsible for admin settings
@@ -184,18 +174,13 @@ class ABWC_Ajax_Cart {
 
 	/**
 	 * Define the locale for this plugin for internationalization.
-	 *
-	 * Uses the ABWC_Ajax_Cart_I18n class in order to set the domain and to register the hook
-	 * with WordPress.
+	 * No operation required (auto-loaded by WordPress.org since 4.6).
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function set_locale() {
-
-		$plugin_i18n = new ABWC_Ajax_Cart_I18n();
-
-		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
+		// No-op.
 	}
 
 	/**
